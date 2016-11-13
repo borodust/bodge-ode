@@ -1,3 +1,3 @@
-# CLODE
+# BODGE-ODE
 
-Thin CFFI wrapper around Open Dynamics Engine.
+Thin Common Lisp wrapper around Open Dynamics Engine (ODE) for `cl-bodge` system.
