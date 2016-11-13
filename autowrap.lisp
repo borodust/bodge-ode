@@ -1,8 +1,7 @@
 (in-package :bodge-ode)
 
 
-(autowrap:c-include
- '(bodge-ode spec "lib.h")
+(c-include '(bodge-ode spec "lib.h")
  :spec-path '(bodge-ode spec)
  :definition-package :%ode
  :exclude-sources (".*.h")
