@@ -6,6 +6,8 @@
 
 (defpackage :bodge-ode
   (:use :cl :alexandria :autowrap :plus-c)
-  (:export define-collision-callback
+  (:export +infinity+
+           contact-flags
+           define-collision-callback
            collision-callback
            space-collide))

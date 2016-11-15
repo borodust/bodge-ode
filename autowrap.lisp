@@ -16,7 +16,6 @@
                    "ode/collision.h"
                    "ode/version.h")
  :exclude-definitions ("dWorldSetStepThreadingImplementation")
- :no-accessors t
- :symbol-regex (("d[A-Z]\\w*" () (lambda (name matches regex)
+ :symbol-regex (("dx?[A-Z]\\w*" () (lambda (name matches regex)
                                    (declare (ignore matches regex))
                                    (subseq name 1)))))
