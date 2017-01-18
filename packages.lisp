@@ -1,7 +1,8 @@
 (in-package :bodge-ode.def)
 
 
-(defpackage :%ode)
+(defpackage :%ode
+  (:use))
 
 
 (defpackage :bodge-ode
