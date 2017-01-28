@@ -17,6 +17,6 @@
   :components ((:file "packages")
                (:file "libode")
                (:file "autowrap")
-               (:file "main")
+               (:file "ode")
                (:module spec
                         :components ((:static-file "lib.h")))))

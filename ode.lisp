@@ -24,8 +24,12 @@
   %ode:+contact-approx1+)
 
 
+(define-constant +double-precision-p+
+    (if (search "double_precision" (%ode:get-configuration)) t nil))
+
+
 (define-constant +infinity+
-    (if (search "double_precision" (%ode:get-configuration))
+    (if +double-precision-p+
         (progn
           #+sbcl sb-ext:double-float-positive-infinity
           #+clozure 1D++0

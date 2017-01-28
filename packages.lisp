@@ -6,8 +6,10 @@
 
 
 (defpackage :bodge-ode
+  (:nicknames :ode)
   (:use :cl :alexandria :autowrap :plus-c)
-  (:export +infinity+
+  (:export +double-precision-p+
+           +infinity+
            contact-flags
            define-collision-callback
            collision-callback
