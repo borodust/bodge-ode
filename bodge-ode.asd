@@ -16,7 +16,7 @@
   :serial t
   :components ((:file "packages")
                (:file "libode")
+               (:static-file "lib.h")
                (:file "autowrap")
                (:file "ode")
-               (:module spec
-                        :components ((:static-file "lib.h")))))
+               (:module spec)))
