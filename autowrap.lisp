@@ -13,4 +13,4 @@
                     "ode/collision_space.h"
                     "ode/collision.h"
                     "ode/version.h")
-  :symbol-regex (("dx?[A-Z]\\w*" 1)))
+  :prefix-regex (("dx?[A-Z]\\w*" 1)))

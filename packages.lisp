@@ -7,7 +7,7 @@
 
 (defpackage :bodge-ode
   (:nicknames :ode)
-  (:use :cl :alexandria :autowrap :plus-c)
+  (:use :cl :alexandria :bodge-autowrap :bodge-plus-c)
   (:export +double-precision-p+
            +infinity+
            contact-flags
