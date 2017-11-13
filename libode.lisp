@@ -3,8 +3,7 @@
 
 (cffi:define-foreign-library libode
   (:darwin (:or "libode.6.dylib" "libode.dylib"))
-  (:unix (:or "libode.so.4" ; debian/ubuntu convention for 0.14 version
-              "libode.so.1" "libode.so"))
+  (:unix (:or "libode.so.6" "libode.so"))
   (:windows "ode.dll")
   (t (:default "ode")))
 
