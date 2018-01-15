@@ -1,13 +1,10 @@
-(in-package :bodge-ode.def)
-
-
-(defpackage :%ode
+(cl:defpackage :%ode
   (:use))
 
 
-(defpackage :bodge-ode
+(cl:defpackage :bodge-ode
   (:nicknames :ode)
-  (:use :cl :alexandria :bodge-autowrap :bodge-plus-c)
+  (:use :cl :alexandria :claw)
   (:export +double-precision-p+
            +infinity+
            contact-flags

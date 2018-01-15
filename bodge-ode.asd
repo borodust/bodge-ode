@@ -1,12 +1,4 @@
-(in-package :cl-user)
-
-
-(defpackage :bodge-ode.def
-  (:use :cl :asdf))
-
-(in-package :bodge-ode.def)
-
-(defsystem bodge-ode
+(asdf:defsystem bodge-ode
   :description "Thin wrapper around Open Dynamics Engine for cl-bodge system"
   :version "0.0.1"
   :author "Pavel Korolev"
@@ -17,6 +9,6 @@
   :components ((:file "packages")
                (:file "libode")
                (:static-file "lib.h")
-               (:file "autowrap")
+               (:file "claw")
                (:file "ode")
                (:module spec)))

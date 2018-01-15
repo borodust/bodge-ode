@@ -25,7 +25,7 @@
 
 
 (define-constant +double-precision-p+
-    (if (search "double_precision" (%ode:get-configuration)) t nil))
+    (if (search "double_precision" (cffi:foreign-string-to-lisp (%ode:get-configuration))) t nil))
 
 
 (define-constant +infinity+

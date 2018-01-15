@@ -1,7 +1,7 @@
 (in-package :bodge-ode)
 
 
-(bodge-autowrap:c-include "lib.h" bodge-ode
+(claw:c-include "lib.h" bodge-ode
   :package :%ode
   :include-sources ("ode/odeconfig.h"
                     "ode/common.h"
