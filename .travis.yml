@@ -1,0 +1,69 @@
+language: c
+sudo: false
+
+addons:
+  apt:
+    packages:
+    - gcc-multilib
+    - g++-multilib
+
+env:
+  global:
+    - NAME: ode
+    - secure: gAmIp48aXNdKhxOWXdIqQSGW5IYzcykwtZFFm4Tr6iTUqwsUrP6U4jWOKuZVtgDDXXqZ3uEuMyAjOYALBnpbWrA37uoRyHrcHbzTBzHaTpCPzJAMd0k8PIvGzQCy1j7Fm3x7BBzUtZkpQf3t96UFkcShC+7ddSWWOP6hM0dbyiYv1NiVUSkobLzQB5L4HV8DlUqEwyPzHs8v3+oee1WHEh9xRUapqyy3QFLtxfinG//6io6KHXe9vCrnc3p0C/yMGGlWbsgD/zi4sESTCHgVYvAlR1wv8CEuq+jtPYD9YoqFXXkxsu2vvfNvBaM0Wm5vc1fvz7MrxdQscAhRkCtHQi9os+esJT28yxlo8n+KkT0XYj5sHoke4szMZvtx6S/r/m4TfBzxgkglGpTWM6cyOJoAIVW9RMWT3JBt/8pxBPyHVl19kqDPdBPZ0QzSD+7/rWRb66pRwBDALaoLsDY5Pkv5IjytXIaIMdZsJ7uS/m+utBK9H7hat8QL9/JaMnxDbnoxSS5ZDVyksTQn29OGBsIMh2nhHWaVQMlBMjBaZPiCMGJk7Zu9s7RnaWPEeLp93CTsH05MxJxwAMcy6m1fqFvCDxdSxYPyz++dFf9m4Y9vsMXGxE+wRK55hQ4JD5ffgM5YKqPAPKp/wURRJXSeAHTOV4wB4IrabxYwjY5CMNE=
+
+matrix:
+  include:
+  - os: linux
+    env:
+      - ARCH=i686
+      - CFLAGS=-m32
+      - EXTENSION=so
+      - CXXFLAGS=-m32
+      - TRIPLET=i686-pc-linux-gnu
+  - os: linux
+    env:
+      - ARCH=x86_64
+      - CFLAGS=-m64
+      - EXTENSION=so
+      - TRIPLET=x86_64-pc-linux-gnu
+  - os: osx
+    env:
+      - ARCH=i686
+      - CFLAGS=-m32
+      - EXTENSION=dylib
+      - CXXFLAGS=-m32
+      - TRIPLET=i686-apple-darwin-gnu
+  - os: osx
+    env:
+      - ARCH=x86_64
+      - CFLAGS=-m64
+      - EXTENSION=dylib
+      - TRIPLET=x86_64-apple-darwin-gnu
+
+branches:
+  only:
+  - "/^v\\d+(\\.\\d+)+$/"
+
+before_install:
+  - |
+    if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
+      brew update
+      brew install autoconf automake libtool
+    fi
+
+script:
+  - cd lib/ && make clean build
+
+before_deploy:
+  - export TARGET_FILE=$TRAVIS_BUILD_DIR/lib$NAME.$EXTENSION.bodged-$ARCH-$TRAVIS_OS_NAME-$TRAVIS_BRANCH
+  - mv $TRAVIS_BUILD_DIR/lib/lib$NAME.$EXTENSION.bodged $TARGET_FILE
+
+deploy:
+  provider: releases
+  api-key: $GITHUB_TOKEN
+  file: $TARGET_FILE
+  skip_cleanup: true
+  overwrite: true
+  on:
+    tags: true

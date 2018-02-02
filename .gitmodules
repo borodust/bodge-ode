@@ -1,0 +1,3 @@
+[submodule "lib/ode"]
+	path = lib/ode
+	url = https://github.com/borodust/ode.git

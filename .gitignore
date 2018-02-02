@@ -8,5 +8,9 @@
 *~
 .\#*
 
-# system dependent junk 
+# system dependent junk
 local/
+
+lib/*.so*
+lib/*.dll*
+lib/*.dylib*

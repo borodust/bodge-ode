@@ -1,5 +1,6 @@
-(claw:c-include "lib.h" bodge-ode
+(claw:c-include "bodge_ode.h" bodge-ode
   :in-package :%ode
+  :sysincludes (:ode-includes)
   :include-sources ("ode/odeconfig.h"
                     "ode/common.h"
                     "ode/odeinit.h"

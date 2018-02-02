@@ -4,11 +4,12 @@
   :author "Pavel Korolev"
   :mailto "dev@borodust.org"
   :license "MIT"
-  :depends-on (alexandria cffi bodge-autowrap bodge-plus-c)
+  :depends-on (alexandria cffi claw)
   :serial t
   :components ((:file "packages")
                (:file "libode")
-               (:static-file "lib.h")
+               (:static-file "bodge_ode.h")
                (:file "claw")
                (:file "ode")
+               (:module ode-includes :pathname "lib/ode/include")
                (:module spec)))
