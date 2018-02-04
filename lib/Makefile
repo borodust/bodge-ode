@@ -21,7 +21,7 @@ else
 		LFLAGS := $(LIBS) -all_load $(STATIC_LIBS)
 	else
 		BIN := $(BIN).so.bodged
-		CCFLAGS := $(CCFLAGS) -Wl,-soname,$(BIN)
+		CCFLAGS := $(CCFLAGS) -Wl,-soname,$(BIN) -Wl,-rpath,'$$ORIGIN/'
 		LFLAGS := -Wl,--whole-archive -Wl,-Bstatic $(STATIC_LIBS) -Wl,--no-whole-archive -Wl,-Bdynamic $(LIBS)
 	endif
 endif
@@ -30,13 +30,19 @@ build: $(BIN)
 
 
 $(BIN):
-	cd ode/ && \
-		./bootstrap && \
-		./configure --enable-double-precision --disable-demos --enable-libccd \
-			    --disable-threading-intf --disable-asserts --with-drawstuff=none \
-		            --with-pic && \
+	cd ode/ &&										\
+		./bootstrap &&									\
+		./configure --enable-double-precision --disable-demos --enable-libccd 		\
+			    --disable-threading-intf --disable-asserts --with-drawstuff=none 	\
+		            --with-pic &&							\
 		make
 	$(CC) -shared $(SRC) $(CCFLAGS) -o $(BIN) $(LFLAGS)
+	if [[ $OSTYPE == darwin* ]] ; then 							\
+		echo "Installing new name for libc++";						\
+		install_name_tool -change /usr/lib/libc++.1.dylib 				\
+			@loader_path/libc++.1.dylib 						\
+			$(BIN);									\
+	fi
 
 clean:
 	cd ode/ && git clean -fdx

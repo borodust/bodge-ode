@@ -1,4 +1,4 @@
-(in-package :bodge-ode)
+(in-package :ode)
 
 
 (declaim (special *collision-input*))

@@ -2,10 +2,10 @@
   (:use))
 
 
-(cl:defpackage :bodge-ode
+(cl:defpackage :ode
   (:nicknames :ode)
   (:use :cl :alexandria :claw)
-  (:export +double-precision-p+
+  (:export libode
            +infinity+
            contact-flags
            define-collision-callback
