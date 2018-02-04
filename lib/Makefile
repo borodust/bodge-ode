@@ -37,7 +37,7 @@ $(BIN):
 		            --with-pic &&							\
 		make
 	$(CC) -shared $(SRC) $(CCFLAGS) -o $(BIN) $(LFLAGS)
-	if [[ $OSTYPE == darwin* ]] ; then 							\
+	if [[ "$$OSTYPE" == "darwin"* ]] ; then							\
 		echo "Installing new name for libc++";						\
 		install_name_tool -change /usr/lib/libc++.1.dylib 				\
 			@loader_path/libc++.1.dylib 						\
