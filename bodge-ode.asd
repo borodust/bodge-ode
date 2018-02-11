@@ -1,6 +1,6 @@
 (asdf:defsystem bodge-ode
-  :description "Thin wrapper around Open Dynamics Engine for cl-bodge system"
-  :version "0.0.1"
+  :description "Thin wrapper over Open Dynamics Engine"
+  :version "1.0.0"
   :author "Pavel Korolev"
   :mailto "dev@borodust.org"
   :license "MIT"
@@ -13,3 +13,13 @@
                (:file "ode")
                (:module ode-includes :pathname "lib/ode/include")
                (:module spec)))
+
+
+(asdf:defsystem bodge-ode/example
+  :description "Simple example for bodge-ode"
+  :version "1.0.0"
+  :author "Pavel Korolev"
+  :mailto "dev@borodust.org"
+  :license "MIT"
+  :depends-on (ode-blob bodge-ode claw)
+  :components ((:file "example")))
