@@ -32,9 +32,9 @@ build: $(BIN)
 $(BIN):
 	cd ode/ &&										\
 		./bootstrap &&									\
-		./configure --enable-double-precision --disable-demos --enable-libccd 		\
-			    --disable-threading-intf --disable-asserts --with-drawstuff=none 	\
-		            --with-pic &&							\
+		CXXFLAGS="$(CXXFLAGS) -s" ./configure --enable-double-precision --disable-demos \
+			    --enable-libccd --disable-threading-intf --disable-asserts		\
+			    --with-drawstuff=none --with-pic &&					\
 		make
 	$(CC) -shared $(SRC) $(CCFLAGS) -o $(BIN) $(LFLAGS)
 	if [[ "$$OSTYPE" == "darwin"* ]] ; then							\
