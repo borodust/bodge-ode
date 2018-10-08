@@ -1,7 +1,3 @@
-(cl:defpackage :%ode
-  (:use))
-
-
 (cl:defpackage :ode
   (:nicknames :ode)
   (:use :cl :alexandria :claw)
