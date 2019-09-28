@@ -1,5 +1,5 @@
 (cl:defpackage :ode.example
-  (:use :cl)
+  (:use :cl :cffi-c-ref)
   (:export run))
 (cl:in-package :ode.example)
 
@@ -18,7 +18,7 @@
 (defvar *space* nil)
 (defvar *body* nil)
 (defvar *geom* nil)
-(defvar *m* (claw:alloc '%ode:mass))
+(defvar *m* (cffi:foreign-alloc '%ode:mass))
 (defvar *contactgroup* nil)
 
 ;;; When the collision system detects that two objects are colliding, it calls this routine
@@ -27,12 +27,15 @@
 
 ;; this is called by dSpaceCollide when two objects in space are
 ;; potentially colliding.
-(claw:defcallback near-callback :void ((data :pointer) (o1 %ode:geom-id) (o2 %ode:geom-id))
+(cffi:defcallback near-callback :void ((data :pointer)
+                                       (o1 %ode:geom-id)
+                                       (o2 %ode:geom-id))
   (declare (ignore data))
   (let ((b1 (%ode:geom-get-body o1))
         (b2 (%ode:geom-get-body o2)))
-    (claw:c-with ((contact %ode:contact :calloc t))
-      (setf (contact :surface :mode) (logior %ode:+contact-bounce+ %ode:+contact-soft-cfm+)
+    (c-with ((contact %ode:contact :clear t))
+      (setf (contact :surface :mode) (logior %ode:+contact-bounce+
+                                             %ode:+contact-soft-cfm+)
             ;; friction parameter
             (contact :surface :mu) ode:+infinity+
             ;; bounce is the amount of "bouncyness"
@@ -41,7 +44,8 @@
             (contact :surface :bounce-vel) 0.1d0
             ;; constraint force mixing parameter
             (contact :surface :soft-cfm) 0.001d0)
-      (let ((numc (%ode:collide o1 o2 1 (contact :geom &) (claw:sizeof '%ode:contact))))
+      (let ((numc (%ode:collide o1 o2 1 (contact :geom &)
+                                (cffi:foreign-type-size '%ode:contact))))
         (when (< 0 numc)
           (let ((c (%ode:joint-create-contact *world* *contactgroup* (contact &))))
             (%ode:joint-attach c b1 b2)))))))
@@ -52,11 +56,11 @@
 
 ;; simulation loop
 (defun sim-loop ()
-  (%ode:space-collide *space* nil (claw:callback 'near-callback))
+  (%ode:space-collide *space* nil (cffi:callback near-callback))
   (%ode:world-quick-step *world* 0.01d0)
   (%ode:joint-group-empty *contactgroup*)
-  (claw:c-let ((pos :double :ptr (%ode:geom-get-position *geom*))
-               (r :double :ptr (%ode:geom-get-rotation *geom*)))
+  (c-let ((pos :double :from (%ode:geom-get-position *geom*))
+          (r :double :from (%ode:geom-get-rotation *geom*)))
     (format t "~&Position: [~{~,4f~^ ~}], Rotation: [~{~,4f~^ ~}][~{~,4f~^ ~}][~{~,4f~^ ~}]"
             (list (pos 0) (pos 1) (pos 2))
             (list (r 0) (r 1) (r 2) (r 3))
@@ -72,14 +76,14 @@
   (setf *world* (%ode:world-create)
         *space* (%ode:hash-space-create nil))
   (%ode:world-set-gravity *world* 0d0 0d0 -9.8d0) ; here i put a bit more gravity than in the
-                                                  ; example for the output to be more exciting
+                                        ; example for the output to be more exciting
   (%ode:world-set-cfm *world* 1d-5)
   (%ode:create-plane *space* 0d0 0d0 1d0 0d0)
   (setf *contactgroup* (%ode:joint-group-create 0)
         ;; create object
         *body* (%ode:body-create *world*)
         *geom* (%ode:create-sphere *space* 0.5d0))
-  (claw:c-let ((m %ode:mass :from *m*))
+  (c-let ((m %ode:mass :from *m*))
     (%ode:mass-set-sphere (m &) 1d0 0.5d0)
     (%ode:body-set-mass *body* (m &))
     (%ode:geom-set-body *geom* *body*))

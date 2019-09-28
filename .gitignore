@@ -11,6 +11,6 @@
 # system dependent junk
 local/
 
-lib/*.so*
-lib/*.dll*
-lib/*.dylib*
+**/*.so*
+**/*.dll*
+**/*.dylib*

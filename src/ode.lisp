@@ -4,7 +4,7 @@
 (declaim (special *collision-input*))
 
 
-(define-bitmask-from-constants (contact-flags)
+(claw-utils:define-bitfield-from-constants contact-flags
   %ode:+contact-mu2+
   %ode:+contact-axis-dep+
   %ode:+contact-f-dir1+
@@ -41,7 +41,9 @@
 
 (defmacro define-collision-callback (name (collision-input this-geom that-geom) &body body)
   (with-gensyms (data-ptr g0 g1)
-    `(defcallback ,name :void ((,data-ptr :pointer) (,g0 %ode:geom-id) (,g1 %ode:geom-id))
+    `(cffi:defcallback ,name :void ((,data-ptr :pointer)
+                                    (,g0 %ode:geom-id)
+                                    (,g1 %ode:geom-id))
        (declare (ignore ,data-ptr))
        (let ((,collision-input *collision-input*)
              (,this-geom ,g0)
@@ -51,7 +53,7 @@
 
 
 (defmacro collision-callback (callback-name)
-  `(callback ',callback-name))
+  `(cffi:callback ,callback-name))
 
 
 (defun space-collide (space collision-input collision-callback)
