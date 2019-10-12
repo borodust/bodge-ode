@@ -63,7 +63,7 @@ install:
 
 script:
   - export TARGET_FILE=$TRAVIS_BUILD_DIR/lib$NAME.$EXTENSION.bodged-$TARGET_ARCH-$TRAVIS_OS_NAME-$TRAVIS_BRANCH
-  - export TARGET_SPEC=$TRAVIS_BUILD_DIR/$LIBNAME-$TARGET_ARCH-$TRAVIS_OS_NAME-$TRAVIS_BRANCH-spec.zip
+  - export TARGET_SPEC=$TARGET_FILE-spec.zip
   - cd src/lib/ && make clean build
   - lisp regen-local-spec-and-zip --arch $TARGET_ARCH "$TRAVIS_BUILD_DIR" $ASDF_SYSTEM "$TARGET_SPEC"
 
