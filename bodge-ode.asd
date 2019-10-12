@@ -4,7 +4,7 @@
   :author "Pavel Korolev"
   :mailto "dev@borodust.org"
   :license "MIT"
-  :depends-on (:alexandria :cffi :cffi-c-ref :claw :claw-utils)
+  :depends-on (:alexandria :cffi :cffi-c-ref :claw :claw-utils :float-features)
   :pathname "src/"
   :serial t
   :components ((:file "packages")

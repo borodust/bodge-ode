@@ -24,19 +24,7 @@
   %ode:+contact-approx1+)
 
 
-(define-constant +infinity+
-    (progn
-      #+sbcl sb-ext:double-float-positive-infinity
-      #+clozure 1D++0
-      #+abcl ext:double-float-positive-infinity
-      #+allegro excl::*infinity-double*
-      #+cmu ext:double-float-positive-infinity
-      #+(and ecl (not infinity-not-available)) si:double-float-positive-infinity
-      #+lispworks #.(read-from-string "10E999")
-      #+scl ext:double-float-positive-infinity
-      #-(or sbcl clozure abcl allegro cmu ecl lispworks scl)
-      most-positive-double-float)
-  :test 'eql)
+(define-constant +infinity+ float-features:single-float-positive-infinity :test '=)
 
 
 (defmacro define-collision-callback (name (collision-input this-geom that-geom) &body body)

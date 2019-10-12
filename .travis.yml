@@ -1,4 +1,4 @@
-language: c
+c: language
 sudo: false
 
 addons:
@@ -10,33 +10,35 @@ addons:
 env:
   global:
     - NAME: ode
+    - ASDF_SYSTEM: bodge-ode
+    - PATH: ~/.bodge/bin/:$PATH
     - secure: "AUyKqYjlNgxMkmKIKxuAX25RYLy5OQeolPZ1BMHWY/gRX+okseiigFshVBqIrMWoN1dw4EZNBYZoIbfM6FKn8XP+n2wr0H4MhdFEAUOMz/sqx9WMnDq7kU1tdh/9vC6rBKGqoeB2r+BHNBX8bX7J6YBDbbzH3zcGSDH0i0aHSp17mkzXVs7m5/TqbM0O6LifGonvJAZMxkqsNisHsLbSfE9RWhNr5j/3+qaYYs8ijG3XoVhtulhfadhTP6O+pyfWoCfbooEY3ULAfLyKqXZ6FhjNvG1LZC/nTb4PfgeZyixkQ+Ylkg2bsp93oO2ojbQ20BVh1Qooxw7hdX7QGXdhtiJrN31f8mInafNFncAAnfLFwWWjlSStnaJ5We/8OXY8kpdVZqzSbQVBNUUooF7fJHIQm+13AKvsqJrHxzD4qhuiiEGNKHF8jDzglqPns+CQUcMTz2h3M1IMHQyGLmx37X/YpETAdsOAOg5oYpFqBa0ACL/JzC26Fdya/7CBcI5z5LIzjwnaNJMxc3TCQFFVpxGs4upQpufcMy4grizV5oUh8qAyFcPQw+M3rFV2E62PGYjFr/ASl/Ux1KurIa99JsJ1fMcfwUho/y00hbmwKBP5r8hPVV3f+r/XmmSR8qBjOJ9hjmzm562FLuOY34QGpH8+fqo4yVPfUnwSyKYEhY0="
 
 matrix:
   include:
   - os: linux
     env:
-      - ARCH=i686
+      - TARGET_ARCH=i686
       - CFLAGS=-m32
       - EXTENSION=so
       - CXXFLAGS=-m32
       - TRIPLET=i686-pc-linux-gnu
   - os: linux
     env:
-      - ARCH=x86_64
+      - TARGET_ARCH=x86_64
       - CFLAGS=-m64
       - EXTENSION=so
       - TRIPLET=x86_64-pc-linux-gnu
   - os: osx
     env:
-      - ARCH=i686
+      - TARGET_ARCH=i686
       - CFLAGS=-m32
       - EXTENSION=dylib
       - CXXFLAGS=-m32
       - TRIPLET=i686-apple-darwin-gnu
   - os: osx
     env:
-      - ARCH=x86_64
+      - TARGET_ARCH=x86_64
       - CFLAGS=-m64
       - EXTENSION=dylib
       - TRIPLET=x86_64-apple-darwin-gnu
@@ -45,6 +47,10 @@ branches:
   only:
   - "/^v\\d+(\\.\\d+)+$/"
 
+cache:
+  directories:
+    - $HOME/Library/Caches/Homebrew
+
 before_install:
   - |
     if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
@@ -52,17 +58,22 @@ before_install:
       brew install autoconf automake libtool || true
     fi
 
+install:
+  - curl -L http://bodge.borodust.org/files/install.sh | sh
+
 script:
+  - export TARGET_FILE=$TRAVIS_BUILD_DIR/lib$NAME.$EXTENSION.bodged-$TARGET_ARCH-$TRAVIS_OS_NAME-$TRAVIS_BRANCH
+  - export TARGET_SPEC=$TRAVIS_BUILD_DIR/$LIBNAME-$TARGET_ARCH-$TRAVIS_OS_NAME-$TRAVIS_BRANCH-spec.zip
   - cd src/lib/ && make clean build
+  - lisp regen-local-spec-and-zip --arch $TARGET_ARCH "$TRAVIS_BUILD_DIR" $ASDF_SYSTEM "$TARGET_SPEC"
 
 before_deploy:
-  - export TARGET_FILE=$TRAVIS_BUILD_DIR/lib$NAME.$EXTENSION.bodged-$ARCH-$TRAVIS_OS_NAME-$TRAVIS_BRANCH
   - mv $TRAVIS_BUILD_DIR/src/lib/lib$NAME.$EXTENSION.bodged $TARGET_FILE
 
 deploy:
   provider: releases
   api-key: $GITHUB_TOKEN
-  file: $TARGET_FILE
+  file: [$TARGET_FILE, $TARGET_SPEC]
   skip_cleanup: true
   overwrite: true
   on:

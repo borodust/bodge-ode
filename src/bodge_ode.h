@@ -1,2 +1,2 @@
-#define dDOUBLE
+#define dSINGLE
 #include <ode/ode.h>

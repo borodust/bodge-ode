@@ -32,7 +32,7 @@ build: $(BIN)
 $(BIN):
 	cd ode/ &&										\
 		./bootstrap &&									\
-		CXXFLAGS="$(CXXFLAGS) -s" ./configure --enable-double-precision --disable-demos \
+		CXXFLAGS="$(CXXFLAGS) -s" ./configure --enable-single-precision --disable-demos \
 			    --enable-libccd --disable-threading-intf --disable-asserts		\
 			    --with-drawstuff=none --with-pic &&					\
 		make

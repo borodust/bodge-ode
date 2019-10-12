@@ -39,11 +39,11 @@
             ;; friction parameter
             (contact :surface :mu) ode:+infinity+
             ;; bounce is the amount of "bouncyness"
-            (contact :surface :bounce) 0.9d0
+            (contact :surface :bounce) 0.9f0
             ;; bounce_vel is the minimum incoming velocity to cause a bounce
-            (contact :surface :bounce-vel) 0.1d0
+            (contact :surface :bounce-vel) 0.1f0
             ;; constraint force mixing parameter
-            (contact :surface :soft-cfm) 0.001d0)
+            (contact :surface :soft-cfm) 0.001f0)
       (let ((numc (%ode:collide o1 o2 1 (contact :geom &)
                                 (cffi:foreign-type-size '%ode:contact))))
         (when (< 0 numc)
@@ -57,7 +57,7 @@
 ;; simulation loop
 (defun sim-loop ()
   (%ode:space-collide *space* nil (cffi:callback near-callback))
-  (%ode:world-quick-step *world* 0.01d0)
+  (%ode:world-quick-step *world* 0.01f0)
   (%ode:joint-group-empty *contactgroup*)
   (c-let ((pos :double :from (%ode:geom-get-position *geom*))
           (r :double :from (%ode:geom-get-rotation *geom*)))
@@ -75,20 +75,20 @@
   (%ode:init-ode)
   (setf *world* (%ode:world-create)
         *space* (%ode:hash-space-create nil))
-  (%ode:world-set-gravity *world* 0d0 0d0 -9.8d0) ; here i put a bit more gravity than in the
+  (%ode:world-set-gravity *world* 0f0 0f0 -9.8f0) ; here i put a bit more gravity than in the
                                         ; example for the output to be more exciting
   (%ode:world-set-cfm *world* 1d-5)
-  (%ode:create-plane *space* 0d0 0d0 1d0 0d0)
+  (%ode:create-plane *space* 0f0 0f0 1f0 0f0)
   (setf *contactgroup* (%ode:joint-group-create 0)
         ;; create object
         *body* (%ode:body-create *world*)
-        *geom* (%ode:create-sphere *space* 0.5d0))
+        *geom* (%ode:create-sphere *space* 0.5f0))
   (c-let ((m %ode:mass :from *m*))
-    (%ode:mass-set-sphere (m &) 1d0 0.5d0)
+    (%ode:mass-set-sphere (m &) 1f0 0.5f0)
     (%ode:body-set-mass *body* (m &))
     (%ode:geom-set-body *geom* *body*))
   ;; set initial position
-  (%ode:body-set-position *body* 0d0 0d0 3d0)
+  (%ode:body-set-position *body* 0f0 0f0 3f0)
   ;; run simulation
   (loop for i from 0 below 200
         do (sim-loop))
