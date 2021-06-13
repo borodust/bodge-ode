@@ -4,15 +4,23 @@
   :author "Pavel Korolev"
   :mailto "dev@borodust.org"
   :license "MIT"
-  :depends-on (:alexandria :cffi :cffi-c-ref :claw :claw-utils :float-features)
+  :depends-on (:alexandria :cffi :cffi-c-ref :float-features :bodge-ode-bindings)
   :pathname "src/"
   :serial t
   :components ((:file "packages")
-               (:static-file "bodge_ode.h")
-               (:file "claw")
-               (:file "ode")
-               (:module :ode-includes :pathname "lib/ode/include")
-               (:module :spec)))
+               (:file "ode")))
+
+
+(asdf:defsystem bodge-ode/wrapper
+  :description "Thin wrapper over Open Dynamics Engine"
+  :version "1.0.0"
+  :author "Pavel Korolev"
+  :mailto "dev@borodust.org"
+  :license "MIT"
+  :depends-on (:alexandria :cffi :cffi-c-ref :claw :claw-utils :float-features)
+  :serial t
+  :components ((:file "src/claw")
+               (:module :ode-includes :pathname "src/lib/ode/include")))
 
 
 (asdf:defsystem bodge-ode/example
@@ -21,6 +29,6 @@
   :author "Pavel Korolev"
   :mailto "dev@borodust.org"
   :license "MIT"
-  :depends-on (:ode-blob :bodge-ode :claw :cffi-c-ref)
+  :depends-on (:ode-blob :bodge-ode :cffi-c-ref)
   :pathname "src/"
   :components ((:file "example")))

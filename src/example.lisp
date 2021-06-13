@@ -77,7 +77,7 @@
         *space* (%ode:hash-space-create nil))
   (%ode:world-set-gravity *world* 0f0 0f0 -9.8f0) ; here i put a bit more gravity than in the
                                         ; example for the output to be more exciting
-  (%ode:world-set-cfm *world* 1d-5)
+  (%ode:world-set-cfm *world* 1f-5)
   (%ode:create-plane *space* 0f0 0f0 1f0 0f0)
   (setf *contactgroup* (%ode:joint-group-create 0)
         ;; create object
